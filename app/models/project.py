@@ -7,12 +7,14 @@ class Project(Base):
 
     id = Column(Integer, primary_key=True, index=True)
     name = Column(String, nullable=False)
+    owner_id = Column(Integer, ForeignKey('users.id'), nullable=False)
     team_id = Column(Integer, ForeignKey('teams.id'), nullable=False)
     created_at = Column(DateTime(timezone=True), server_default=func.now())
     updated_at = Column(DateTime(timezone=True), onupdate=func.now())
     description = Column(String(500), nullable=True)
     status = Column(String, default="active")
- 
+
+    owner = relationship("User", backref="owned_projects")
     team = relationship("Team", backref="projects")
     tasks = relationship("Task", back_populates="project", cascade="all, delete-orphan")
     
