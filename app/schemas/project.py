@@ -1,23 +1,25 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, constr
 from typing import Optional, List
+from datetime import datetime
 
 class ProjectBase(BaseModel):
-    id: int
-    name: str
+    name: constr = constr(min_length=1, max_length=100)
     description: Optional[str] = None
-    members: List[str] = []
 
 class ProjectCreate(ProjectBase):
-    pass
+    team_id: int
 
 class ProjectUpdate(BaseModel):
     name: Optional[str] = None
     description: Optional[str] = None
-    members: Optional[List[str]] = None
+    team_id: Optional[int] = None
 
 class ProjectOut(ProjectBase):
     id: int
-    owner_id: int
+    team_id: int
+    created_by: int
+    created_at: datetime
+    updated_at: Optional[datetime]
 
     class Config:
-        orm_mode = True
+        from_attributes = True
